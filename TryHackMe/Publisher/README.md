@@ -2,7 +2,7 @@
 
 > **SPIP 4.2.0 | Unauthenticated RCE | SSH Key Extraction | Linux Enumeration | Docker | SUID Abuse | Privilege Escalation**
 
-![Difficulty](https://img.shields.io/badge/Difficulty-Easy-f9a825?style=flat-square&labelColor=555555)
+![Difficulty](https://img.shields.io/badge/Difficulty-Easy-55a630?style=flat-square&labelColor=555555)
 ![Platform](https://img.shields.io/badge/Platform-TryHackMe-00a98f?style=flat-square&labelColor=555555)
 ![Vulnerability](https://img.shields.io/badge/Vulnerability-SPIP%20RCE-e63946?style=flat-square&labelColor=555555)
 ![Service](https://img.shields.io/badge/Service-HTTP%20%7C%20SSH-008cc1?style=flat-square&labelColor=555555)
@@ -38,21 +38,6 @@ The machine demonstrates how an externally exposed vulnerable CMS can provide in
 
 ---
 
-# 🖥️ Target Information
-
-| Information | Value |
-|---|---|
-| Target IP | `10.49.142.78` |
-| OS | Ubuntu 20.04.6 LTS |
-| Web Server | Apache |
-| HTTP | `80/tcp` |
-| CMS | SPIP |
-| SPIP Version | `4.2.0` |
-| Initial User | `think` |
-| Privilege Escalation | Docker / writable script / SUID Bash |
-| Final Privilege | `root` |
-
----
 
 # 🔗 Attack Chain
 
@@ -124,7 +109,7 @@ The website displayed a **Community Magazine** application.
 
 The page contained articles, tutorials, galleries and other magazine-related content.
 
-![Web Application](screenshots/01-web.png)
+<img width="1448" height="834" alt="1" src="https://github.com/user-attachments/assets/3491f18b-4170-475b-b9d1-788d45c0419e" />
 
 The site appeared to be a CMS-backed application, so the next step was directory enumeration.
 
@@ -149,7 +134,7 @@ The scan identified interesting directories including:
 
 The `/spip/` directory was particularly interesting because **SPIP** is a known content-management system.
 
-![Gobuster Enumeration](screenshots/02-gobuster.png)
+<img width="900" height="308" alt="2" src="https://github.com/user-attachments/assets/536df03e-bef4-450a-a870-1a5b240d9307" />
 
 I then accessed:
 
@@ -170,7 +155,7 @@ Title : The Power and Peril of Online Publications :
 Navigating the Impact on Society
 ```
 
-![SPIP Application](screenshots/03-spip.png)
+<img width="1208" height="733" alt="3" src="https://github.com/user-attachments/assets/0e668c1b-ac31-4365-a0cb-b3b6adab02c4" />
 
 At this point, the next objective was to determine the exact SPIP version.
 
@@ -198,7 +183,7 @@ The important information was:
 SPIP 4.2.0
 ```
 
-![SPIP Version](screenshots/04-version.png)
+<img width="1015" height="232" alt="4" src="https://github.com/user-attachments/assets/0fd6abba-135d-4742-b8e5-f1fe4d277f9f" />
 
 Knowing the exact software version makes vulnerability research much more reliable.
 
@@ -239,7 +224,7 @@ The module description identified it as:
 SPIP form PHP Injection
 ```
 
-![Metasploit SPIP Modules](screenshots/05-metasploit-search.png)
+<img width="1085" height="401" alt="5" src="https://github.com/user-attachments/assets/c7632745-2cec-4d0e-bdf5-3b6831916842" />
 
 ---
 
@@ -292,7 +277,7 @@ LHOST     192.168.132.194
 LPORT     4444
 ```
 
-![Metasploit Configuration](screenshots/06-metasploit-options.png)
+<img width="1243" height="701" alt="6" src="https://github.com/user-attachments/assets/40a5fd97-7b36-4c27-81a7-dbdcab82240d" />
 
 ---
 
@@ -322,8 +307,6 @@ A Meterpreter session was opened:
 ```text
 Meterpreter session 1 opened
 ```
-
-![Successful SPIP RCE](screenshots/07-rce.png)
 
 ---
 
@@ -391,7 +374,7 @@ The screenshot showed the user flag as:
 fa229046d44eda6a3598c73ad96f4ca5
 ```
 
-![User Flag](screenshots/08-user-flag.png)
+<img width="1009" height="666" alt="7" src="https://github.com/user-attachments/assets/57727af6-9655-4d4f-8772-7c19439e0674" />
 
 At this point, initial access had been established and the user-level objective was complete.
 
@@ -436,7 +419,7 @@ The output contained:
 -----END OPENSSH PRIVATE KEY-----
 ```
 
-![SSH Private Key](screenshots/09-ssh-private-key.png)
+<img width="614" height="725" alt="8-1" src="https://github.com/user-attachments/assets/31699541-1146-44a8-947e-5840264d9629" />
 
 ---
 
@@ -462,7 +445,7 @@ I obtained an SSH shell as:
 think@ip-10-49-142-78
 ```
 
-![SSH Access](screenshots/10-ssh.png)
+<img width="794" height="711" alt="8-2" src="https://github.com/user-attachments/assets/03fbb4df-d416-4350-9032-0e32d7f015f3" />
 
 This provided a more stable SSH session for local enumeration and privilege escalation.
 
@@ -514,6 +497,9 @@ The server was listening on:
 0.0.0.0:2062
 ```
 
+<img width="1372" height="460" alt="9-1" src="https://github.com/user-attachments/assets/0a3d45cb-e696-445d-9c6b-f36267bfc042" />
+
+
 I then downloaded LinPEAS onto the target.
 
 Because the original location did not allow writing, I used `/dev/shm`:
@@ -537,7 +523,8 @@ and executed it:
 ./linpeas.sh
 ```
 
-![LinPEAS Transfer](screenshots/10-1-linpeas.png)
+<img width="999" height="562" alt="9-2" src="https://github.com/user-attachments/assets/1d41fef1-cbe2-4a94-8904-6d2071ffc54b" />
+
 
 ---
 
@@ -569,7 +556,7 @@ It then provided options:
 5) Quit
 ```
 
-![Container Management](screenshots/10-2-container.png)
+<img width="638" height="244" alt="10-1" src="https://github.com/user-attachments/assets/56614bd8-30a9-4de5-82ac-48e450e93dcc" />
 
 This indicated that the machine had custom container-management functionality.
 
@@ -607,7 +594,7 @@ docker run -d --restart always -p 80:80 \
 spip-image:latest
 ```
 
-![run_container.sh](screenshots/10-2-run-container.png)
+<img width="813" height="859" alt="10-2" src="https://github.com/user-attachments/assets/3a99f813-e711-4ceb-9b59-0e6057dc854a" />
 
 The script was therefore responsible for controlling Docker containers.
 
@@ -669,7 +656,7 @@ rws
 
 The `s` indicated that the **SUID bit** had been set.
 
-![SUID Bash](screenshots/11-suid-bash.png)
+<img width="652" height="559" alt="11" src="https://github.com/user-attachments/assets/4237adeb-c847-40b8-b0c1-1961af51813b" />
 
 ---
 
@@ -717,8 +704,6 @@ spip
 
 This confirmed that the shell had access to the root user's home directory.
 
-![Root Access](screenshots/11-root.png)
-
 ---
 
 # 🚩 20. Retrieving the Root Flag
@@ -734,5 +719,3 @@ The root flag shown in the screenshot was:
 ```text
 3a4225cc9e85709adae6ef55d6a4f2ca
 ```
-
-![Root Flag](screenshots/11-root-flag.png)
