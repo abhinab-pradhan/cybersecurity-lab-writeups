@@ -2,7 +2,7 @@
 
 > **Windows Enumeration | Apache Tika 1.17 | CVE-2018-1335 | Remote Code Execution | Windows Privilege Escalation | AlwaysInstallElevated**
 
-![Difficulty](https://img.shields.io/badge/Difficulty-Easy-f9a825?style=flat-square&labelColor=555555)
+![Difficulty](https://img.shields.io/badge/Difficulty-Easy-55a630?style=flat-square&labelColor=555555)
 ![Platform](https://img.shields.io/badge/Platform-TryHackMe-00a98f?style=flat-square&labelColor=555555)
 ![OS](https://img.shields.io/badge/OS-Windows-0078d4?style=flat-square&labelColor=555555)
 ![Vulnerability](https://img.shields.io/badge/Vulnerability-CVE--2018--1335-e63946?style=flat-square&labelColor=555555)
