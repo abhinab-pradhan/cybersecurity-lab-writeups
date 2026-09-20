@@ -1,4 +1,4 @@
-# 🛡️ TryHackMe: Billing
+# 🛡️ TryHackMe — Billing
 
 > **Linux Privilege Escalation | Web Exploitation | CVE-2023-30258**
 
