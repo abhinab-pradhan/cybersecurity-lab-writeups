@@ -1,4 +1,4 @@
-# 🕵️ CyberLens
+# 🕵️ TryHackMe — CyberLens
 
 > **Windows Enumeration | Apache Tika 1.17 | CVE-2018-1335 | Remote Code Execution | Windows Privilege Escalation | AlwaysInstallElevated**
 
