@@ -7,7 +7,6 @@
 ![Tools](https://img.shields.io/badge/Tools-Nmap%20%7C%20Metasploit%20%7C%20Fail2Ban-blue)
 ![Status](https://img.shields.io/badge/Status-Pwned-success)
 
-**Objective:** Gain an initial foothold via an exposed web application and escalate privileges by abusing a security tool's configuration.
 
 ---
 
