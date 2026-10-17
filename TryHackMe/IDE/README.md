@@ -1,4 +1,4 @@
-# TryHackMe --- IDE
+# TryHackMe — IDE
 
 ![Difficulty](https://img.shields.io/badge/Difficulty-Easy-brightgreen)
 ![Platform](https://img.shields.io/badge/Platform-TryHackMe-red)
