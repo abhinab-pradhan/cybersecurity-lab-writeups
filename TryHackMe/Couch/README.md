@@ -11,13 +11,10 @@ This write-up documents my approach to the **Couch** room on TryHackMe, based on
 The attack path is:
 
 1.  Enumerate the target and discover CouchDB on port `5984`.
-2.  Explore the exposed CouchDB web interface and discover credentials
-    in a document.
+2.  Explore the exposed CouchDB web interface and discover credentials in a document.
 3.  Use the recovered credentials to connect over SSH as `atena`.
-4.  Inspect the user's shell history and discover a Docker API endpoint
-    listening locally on port `2375`.
-5.  Use the exposed Docker API to start a privileged container with the
-    host filesystem mounted, then read the root flag.
+4.  Inspect the user's shell history and discover a Docker API endpoint listening locally on port `2375`.
+5.  Use the exposed Docker API to start a privileged container with the host filesystem mounted, then read the root flag.
 
 
 ## Attack chain
@@ -65,22 +62,16 @@ The screenshot shows these open ports:
       `22/tcp` SSH       OpenSSH 7.2p2 on Ubuntu
     `5984/tcp` HTTP      CouchDB 1.6.1
 
-**Screenshot:** `images/1.png`
+<img width="809" height="287" alt="1" src="https://github.com/user-attachments/assets/16ee3af9-fa19-4640-8281-3d971e7c222c" />
 
-CouchDB commonly exposes its HTTP API on port `5984`. The next step is
-to inspect the web interface and determine whether access controls are
-configured correctly.
+CouchDB commonly exposes its HTTP API on port `5984`. The next step is to inspect the web interface and determine whether access controls are configured correctly.
 
 ## 2. Enumerate CouchDB endpoints
 
 Use directory/content discovery against the CouchDB HTTP service:
 
 ``` bash
-feroxbuster -u http://<TARGET_IP>:5984/ \
-  -w /usr/share/wordlists/dirb/common.txt \
-  -x pdf,txt,log,bak,php,md,zip,jpg,png,jpeg,js,sh \
-  -s 200,301,302,303,304,401,403 \
-  --scan-dir-listings -t 100
+feroxbuster -u http://<TARGET_IP>:5984/ -w /usr/share/wordlists/dirb/common.txt -x pdf,txt,log,bak,php,md,zip,jpg,png,jpeg,js,sh -s 200,301,302,303,304,401,403 --scan-dir-listings -t 100
 ```
 
 The recorded scan identifies CouchDB endpoints including:
@@ -91,7 +82,7 @@ The recorded scan identifies CouchDB endpoints including:
 -   `/_utils/`
 -   `/_utils/session.html`
 
-**Screenshot:** `images/2.png`
+<img width="1280" height="703" alt="2" src="https://github.com/user-attachments/assets/1c9f8a33-b7d1-4a0f-9ba1-c42cebf4368c" />
 
 Open the CouchDB web interface:
 
@@ -101,15 +92,13 @@ http://<TARGET_IP>:5984/_utils/
 
 The interface shows several databases, including `couch` and `secret`.
 
-**Screenshot:** `images/3.png`
+<img width="1290" height="525" alt="3" src="https://github.com/user-attachments/assets/d05cb6bc-f58e-4c14-a05d-e4fe7b8a00b1" />
 
 ## 3. Find credentials in the `secret` database
 
-Open the `secret` database and inspect the document shown in the
-screenshot. It contains a field named `passwordbackup` with a username
-and password.
+Open the `secret` database and inspect the document shown in the screenshot. It contains a field named `passwordbackup` with a username and password.
 
-**Screenshot:** `images/4.png`
+<img width="1074" height="380" alt="4" src="https://github.com/user-attachments/assets/13b8ebce-d5e0-4df4-9456-e232c7770fb8" />
 
 The visible credential is shown in the form:
 
@@ -117,9 +106,7 @@ The visible credential is shown in the form:
 atena:<PASSWORD_FROM_DOCUMENT>
 ```
 
-Use the value from your own lab instance rather than copying a password
-from a different run. This is sensitive information exposed through an
-unauthenticated or insufficiently protected CouchDB interface.
+Use the value from your own lab instance rather than copying a password from a different run. This is sensitive information exposed through an unauthenticated or insufficiently protected CouchDB interface.
 
 ## 4. Connect to the target over SSH
 
@@ -137,7 +124,7 @@ id
 
 The screenshot confirms a shell as `atena` on Ubuntu 16.04.7 LTS.
 
-**Screenshot:** `images/5.png`
+<img width="1069" height="333" alt="5" src="https://github.com/user-attachments/assets/4ce96899-078d-4323-bcc8-32ab6b2a51c3" />
 
 ## 5. Retrieve the user flag
 
@@ -154,7 +141,7 @@ The screenshot shows the user flag:
 THM{1ns3cure_couchdb}
 ```
 
-**Screenshot:** `images/6.png`
+<img width="269" height="72" alt="6" src="https://github.com/user-attachments/assets/f77fe0f3-a9b1-4212-818e-8a196451648a" />
 
 ## 6. Check sudo permissions and inspect the home directory
 
@@ -174,7 +161,7 @@ ls -la
 The directory contains `.bash_history`, which is useful for
 understanding commands previously run by the account.
 
-**Screenshot:** `images/7.png`
+<img width="583" height="293" alt="7" src="https://github.com/user-attachments/assets/4718a930-eb1c-4db7-9c1e-ed47bc61d908" />
 
 ## 7. Inspect `.bash_history`
 
@@ -184,18 +171,16 @@ Read the shell history:
 cat .bash_history
 ```
 
-The history includes a command that contacts a Docker API listening on
-localhost port `2375`:
+The history includes a command that contacts a Docker API listening on localhost port `2375`:
 
 ``` bash
 docker -H 127.0.0.1:2375 run --rm -it --privileged --net=host -v /:/mnt alpine
 ```
 
-This is the key finding. An accessible Docker API can be dangerous when
-it allows a user to create privileged containers and mount the host
-filesystem.
+This is the key finding. An accessible Docker API can be dangerous when it allows a user to create privileged containers and mount the host filesystem.
 
-**Screenshots:** `images/8.png`, `images/9.png`
+<img width="502" height="140" alt="8" src="https://github.com/user-attachments/assets/31f3369d-b2b4-4d85-bed6-3edb13730eb2" />
+<img width="727" height="94" alt="9" src="https://github.com/user-attachments/assets/c2cff500-0ef2-4c38-9331-12c098dc69e5" />
 
 ## 8. Use the exposed Docker API
 
@@ -230,10 +215,9 @@ The screenshot shows:
 root
 ```
 
-**Screenshot:** `images/10.png`
+<img width="801" height="93" alt="10" src="https://github.com/user-attachments/assets/346809b4-bed8-4f75-a5e0-93989e996742" />
 
-Because the host filesystem is mounted at `/mnt`, the host's root
-directory is accessible through `/mnt` from inside the container.
+Because the host filesystem is mounted at `/mnt`, the host's root directory is accessible through `/mnt` from inside the container.
 
 ## 9. Retrieve the root flag
 
@@ -250,7 +234,7 @@ The screenshot shows the root flag:
 THM{RCE_using_Docker_API}
 ```
 
-**Screenshot:** `images/11.png`
+<img width="419" height="85" alt="11" src="https://github.com/user-attachments/assets/39d7c167-c384-4e6a-a11b-3e19dbecd7a2" />
 
 ## Flags
 
