@@ -1,8 +1,7 @@
 # TryHackMe — Couch
 
-![Difficulty](https://img.shields.io/badge/Platform-TryHackMe-red)
+![Difficulty](https://img.shields.io/badge/Difficulty-Easy-55a630?style=flat-square&labelColor=555555)
 ![Focus](https://img.shields.io/badge/Focus-CouchDB%20%7C%20Linux%20Privilege%20Escalation-blue)
-![Status](https://img.shields.io/badge/Write--up-Completed-brightgreen)
 
 ## Overview
 
