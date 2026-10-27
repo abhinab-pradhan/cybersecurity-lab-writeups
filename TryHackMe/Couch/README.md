@@ -5,8 +5,7 @@
 
 ## Overview
 
-This write-up documents my approach to the **Couch** room on TryHackMe, based on the screenshots included in the accompanying ZIP archive.
-
+This write-up documents my approach to the **Couch** room on TryHackMe.
 The attack path is:
 
 1.  Enumerate the target and discover CouchDB on port `5984`.
