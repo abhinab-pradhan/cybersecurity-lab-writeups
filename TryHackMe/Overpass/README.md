@@ -7,7 +7,7 @@
 
 ## Overview
 
-This write-up documents the **Overpass** TryHackMe room using thescreenshots included with this report.
+This write-up documents the **Overpass** TryHackMe room.
 
 The path shown in the screenshots is:
 
