@@ -6,7 +6,7 @@
 
 ## Overview
 
-This write-up documents the **Agent Sudo** TryHackMe room using the screenshots provided in the ZIP archive.
+This write-up documents the **Agent Sudo** TryHackMe room.
 
 The investigation starts with service enumeration, discovers an FTP account through a password brute-force exercise, and uses clues in the website and FTP files to recover the SSH password for `james`. The privilege-escalation step abuses a vulnerable sudo version/configuration that allows `sudo -u#-1` to bypass a `!root` restriction.
 
