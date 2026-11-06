@@ -8,7 +8,7 @@
 
 ## Overview
 
-This write-up documents my walkthrough of the **Cyborg** room on TryHackMe, based on the screenshots provided in the ZIP archive.
+This write-up documents my walkthrough of the **Cyborg** room on TryHackMe.
 
 The attack path begins with web enumeration. An exposed Apache directory reveals Squid proxy configuration and a password hash. After cracking the hash, the recovered password is used to access a Borg backup archive. The backup contains credentials for the `alex` account. After gaining SSH access, a root-executable backup script is found to accept a command-line argument that can be executed with elevated privileges.
 
