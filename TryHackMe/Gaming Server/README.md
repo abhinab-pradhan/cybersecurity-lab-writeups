@@ -2,6 +2,10 @@
 
 > A boot2root box revolving around a fictional gaming-lore site ("Draagan"). Web enumeration leaks a username and an encrypted SSH private key, which cracks with a custom wordlist found on the server itself. Privilege escalation goes through a misconfigured `lxd` group membership.
 
+![Difficulty](https://img.shields.io/badge/Difficulty-Easy-green)
+![Focus](https://img.shields.io/badge/Focus-Privilege%20Escalation-orange?style=flat-square)
+![Status](https://img.shields.io/badge/Status-Completed-success?style=flat-square)
+
 ---
 
 ## 🗺️ Attack Path Summary
