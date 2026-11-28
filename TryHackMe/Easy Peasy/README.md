@@ -3,6 +3,8 @@
 > A multi-flag box that chains hidden HTML, multiple encodings (Base64 / Base85 / binary / ROT13), hash cracking, steganography, and a writable root cron job for privilege escalation.
 
 ![Difficulty](https://img.shields.io/badge/Difficulty-Easy-green)
+![Focus](https://img.shields.io/badge/Focus-Privilege%20Escalation-orange?style=flat-square)
+![Status](https://img.shields.io/badge/Status-Completed-success?style=flat-square)
 
 ---
 ## 🗺️ Attack Path Summary
