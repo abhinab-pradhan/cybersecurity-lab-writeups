@@ -1,9 +1,11 @@
 # TryHackMe — Lian Yu
 
+> A boot2root box requiring web enumeration, steganography, file-header repair, hash cracking, and a `pkexec` privilege escalation to reach root.
 
 ![Difficulty](https://img.shields.io/badge/Difficulty-Easy-55a630?style=flat-square&labelColor=555555)
-![Focus](https://img.shields.io/badge/Focus-Web%20Enumeration%20%7C%20Privilege%20escalation-blue)
- 
+![Focus](https://img.shields.io/badge/Focus-Privilege%20Escalation-orange?style=flat-square)
+![Status](https://img.shields.io/badge/Status-Completed-success?style=flat-square)
+
 ---
 
 ## 🗺️ Attack Path Summary
