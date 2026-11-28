@@ -4,6 +4,10 @@
 
 > A layered boot2root box: a port-knocking sequence hidden in Brainfuck code, steganography, a Vigenère-ciphered credential, OS command injection in a Flask "review" form, a reverse-engineered SUID binary, and a root cron job race condition.
 
+![Difficulty](https://img.shields.io/badge/Difficulty-Medium-orange)
+![Focus](https://img.shields.io/badge/Focus-Privilege%20Escalation-blue?style=flat-square)
+![Status](https://img.shields.io/badge/Status-Completed-success?style=flat-square)
+
 ---
 
 ## 🗺️ Attack Path Summary
